@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+      <title>Scribe Notes - Home</title>
+      
+      <link rel="stylesheet" href="styles.css">
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&family=Fira+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
+      <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet" />
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Gelasio:ital,wght@0,400..700;1,400..700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto+Slab:wght@100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+      <link rel="icon" href="images/logo-dm.svg" type="image/svg+xml">
+  </head>
+  <body>
+      <div id="notifsContainer"></div>
+      <div id="equipHover" class="disabled">
+          <p id="equipHoverHead">label</p>
+          <p id="equipHoverRarity">common</p>
+          <div id="equipHoverPower">
+              <p id="equipHoverPowerP">342</p>
+              <img src="equips/broadsword.svg">
+          </div>
+          <p id="equipHoverTrait">no trait</p>
+          <div id="equipHoverValue">
+              <p id="equipHoverValueP">342</p>
+              <img src="images/coin.svg">
+          </div>
+      </div>
+      <div id="energyOverlayOuter" class="disabled">
+          <div id="energyOverlay">
+              <p id="energyOverlayP"></p>
+              <button id="energyOverlayClose" onclick="document.getElementById('energyOverlayOuter').classList.add('disabled');document.getElementById('scribeContent').classList.remove('no-scroll')">X</button>
+          </div>
+      </div>
+      <div id="bodyContainer">
+          <div id="navbar">
+              <div id="navTitleContainer">
+                  <img>
+                  <h2 id="navTitle" class="header" onclick='updateBooksCollapse();window.location.href = "index.html";'>Scribe Notes</h2>
+              </div>
+              <div class="navbox button" onclick='updateBooksCollapse();window.location.href = "index.html";'>
+                  <img src="images/homeicon.svg" class="navimg" draggable="false">
+                  <h3 id="homeLink" class="navlink">Home</h3>
+              </div>
+              <div class="navbox button">
+                  <img src="images/scribe.svg" class="navimg" draggable="false">
+                  <h3 id="homeLink" class="navlink">Scribe</h3>
+              </div>
+              <div class="navbox button" onclick='updateBooksCollapse();window.location.href = "study.html";'>
+                  <img src="images/edit-pencil%20.svg" class="navimg" draggable="false">
+                  <h3 id="studyLink" class="navlink">Study</h3>
+              </div>
+              <div class="navbox button" onclick="toggleBooksCollapse()">
+                  <img src="images/book-stack.svg" class="navimg" draggable="false">
+                  <h3 id="booksLink" class="navlink">Books</h3>
+                  <img src="images/nav-arrow-up.svg" id="booksCollapseArrow">
+              </div>
+              <div id="booksCollapse">
+              </div>
+              <div id="newDocPrompt">
+                  <input type="text" placeholder="New Doc Name" id="newDocInput" value="">
+                  <div id="newDocPromptButtons">
+                      <button id="newDocSubmit" onclick="newDocNameSubmit()" class="button">Submit</button>
+                      <button id="newDocCancel" onclick="toggleNewDocPrompt();creatingNewDoc=!creatingNewDoc;" class="button">X</button>
+                  </div>
+              </div>
+              <div id="newFolderPrompt">
+                  <input type="text" placeholder="New Folder Name" id="newFolderInput" value="">
+                  <div id="newFolderPromptButtons">
+                      <button id="newFolderSubmit" onclick="newFolderNameSubmit()" class="button">Submit</button>
+                      <button id="newFolderCancel" onclick="toggleNewFolderPrompt();creatingNewFolder=!creatingNewFolder;" class="button">X</button>
+                  </div>
+              </div>
+              <div id="settingsLink" class="navbox button" onclick="toggleSettings()">
+                  <img src="images/settings.svg" class="navimg" draggable="false">
+                  <h3 id="homeLink" class="navlink">Settings</h3>
+              </div>
+          </div>
+          <div id="scribeContent">
+              <div id="scribeNav">
+                  <div id="scribeNavCharacter" onclick="changeTab('Character')" class="button">
+                      <img src="images/scribe.svg">
+                      <p>Character</p>
+                  </div>
+                  <div id="scribeNavQuests" onclick="changeTab('Quests')" class="button">
+                      <img src="images/quests.svg">
+                      <p>Quests</p>
+                  </div>
+                  <div id="scribeNavAchievements" onclick="changeTab('Achievements')" class="button">
+                      <img src="images/achievements.svg">
+                      <p>Achievements</p>
+                  </div>
+                  <div id="scribeNavArena" onclick="changeTab('Arena')" class="button">
+                      <img src="images/arena.svg">
+                      <p>Arena</p>
+                  </div>
+                  <div id="scribeNavShop" onclick="changeTab('Shop')" class="button">
+                      <img src="images/shop.svg">
+                      <p>Shop</p>
+                  </div>
+              </div>
+              <div id="scribeContentInner">
+                  <div id="scribePageCharacter" class="scribePage">
+                      <div id="characterTopBar">
+                          <div id="characterCoins">
+                              <img src="images/coin.svg">
+                              <p>100</p>
+                          </div>
+                          <div id="characterNameContainer">
+                              <h3 id="characterName" class="button">Character name</h3>
+                          </div>
+                      </div>
+                      <div id="characterContentDiv">
+                          <div id="characterSkills">
+                              <table id="characterAttributes">
+                                  <thead>
+                                      <th>Attribute</th>
+                                      <th>Level</th>
+                                      <th>+Lv.</th>
+                                  </thead>
+                                  <tr id="attributeStrength">
+                                      <td>Strength</td>
+                                      <td>0</td>
+                                      <td>
+                                          <button>+</button>
+                                      </td>
+                                  </tr>
+                                  <tr id="attributeDexterity">
+                                      <td>Dexterity</td>
+                                      <td>0</td>
+                                      <td>
+                                          <button>+</button>
+                                      </td>
+                                  </tr>
+                                  <tr id="attributeEndurance">
+                                      <td>Endurance</td>
+                                      <td>0</td>
+                                      <td>
+                                          <button>+</button>
+                                      </td>
+                                  </tr>
+                                  <tr id="attributeIntelligence">
+                                      <td>Intelligence</td>
+                                      <td>0</td>
+                                      <td>
+                                          <button>+</button>
+                                      </td>
+                                  </tr>
+                                  <tr id="attributeWisdom">
+                                      <td>Wisdom</td>
+                                      <td>0</td>
+                                      <td>
+                                          <button>+</button>
+                                      </td>
+                                  </tr>
+                                  <tr id="availablePoints">
+                                      <td colspan="3">Skill points: 0</td>
+                                  </tr>
+                              </table>
+                              <p id="characterLevel">Level: 0</p>
+                              <div id="characterXp">
+                                  <progress max="100" value="25" id="characterXpProgress"></progress>
+                                  <p id="characterXpP">0/100 XP</p>
+                              </div>
+                          </div>
+                          <div id="characterEquipment">
+                              <h2>Inventory</h2>
+                              <table id="characterEquipmentEquipped">
+                                  <tr id="characterEquipmentHeaders">
+                                      <td id="equipHeadLabel">Head</td>
+                                      <td id="equipTorspLabel">Torso</td>
+                                      <td id="equipLegsLabel">Legs</td>
+                                      <td id="equipBootsLabel">Boots</td>
+                                      <td id="equipBootsLabel">Primary</td>
+                                      <td id="equipGlovesLabel">Secondary</td>
+                                  </tr>
+                                  <tr id="characterEquipmentSquares">
+                                      <td id="equipHead" class="equipSquare" data-name="head">
+                                      </td>
+                                      <td id="equipTorso" class="equipSquare" data-name="torso"></td>
+                                      <td id="equipLegs" class="equipSquare" data-name="legs"></td>
+                                      <td id="equipBoots" class="equipSquare" data-name="boots"></td>
+                                      <td id="equipPrimary" class="equipSquare" data-name="primary"></td>
+                                      <td id="equipSecondary" class="equipSquare" data-name="secondary"></td>
+                                  </tr>
+                              </table>
+                              <div id="characterEquipSort">
+                                  <p>Sort by:</p>
+                                  <button id="sortRarity">Rarity</button>
+                                  <button id="sortPower" >Power</button>
+                                  <select id="sortType">
+                                      <option value="">All types</option>
+                                      <option value="Head">Head</option>
+                                      <option value="Torso">Torso</option>
+                                      <option value="Legs">Legs</option>
+                                      <option value="Boots">Boots</option>
+                                      <option value="Primary">Primary</option>
+                                      <option value="Secondary">Secondary</option>
+                                  </select>
+                              </div>
+                              <div id="characterEquipmentStored">
+                              </div>
+                          </div>
+                      </div>
+                      <div id="characterTotalStats">
+                          <h3>Stats</h3>
+                          <table id="statsTable">
+                              <tr>
+                                  <td id="statsEnergy" class="statsLabel">Energy</td>
+                                  <td id="statsEnergyVal">
+                                      <progress value="50" max="100" id="statsEnergyProgress"></progress>
+                                      <p id="statsEnergyProgressLabel">50/100</p>
+                                  </td>
+                              </tr>
+                              <tr>
+                                  <td id="statsHealth" class="statsLabel">Health</td>
+                                  <td id="statsHealthVal">100</td>
+                              </tr>
+                              <tr>
+                                  <td id="statsDefense" class="statsLabel">Defense</td>
+                                  <td id="statsDefenseVal">100</td>
+                              </tr>
+                              <tr>
+                                  <td id="statsTotalAttributes" class="statsLabel">Total Attributes</td>
+                                  <td id="statsTotalAttributesVal">S: 1, D: 2, E:3, I: 4, W: 5</td>
+                              </tr>
+                              <tr>
+                                  <td id="statsAttack" class="statsLabel">Attack Damage</td>
+                                  <td id="statsAttackVal">100</td>
+                              </tr>
+                          </table>
+                      </div>
+                  </div>
+                  <div id="scribePageQuests" class="scribePage">
+                      <h2>Quests</h2>
+                      <div id="weeklyQuestsContainer">
+                          <h3 id="weeklyQuestsHeader">Weekly Quests</h3>
+                          <div id="weeklyQuests">
+
+                          </div>
+                      </div>
+                  </div>
+                  <div id="scribePageAchievements" class="scribePage">
+                      <h2>Achievements</h2>
+                      <h3>Win Battles<span class="achieveStage">Progress: 123</span></h3>
+                      <div id="achievsWinBattles"></div>
+                      <h3>Complete Weekly Quests<span class="achieveStage">Progress: 123</span></h3>
+                      <div id="achievsWeeklies"></div>
+                      <h3>Collect Legendary or Rarer Items<span class="achieveStage">Progress: 123</span></h3>
+                      <div id="achievsCollect"></div>
+                      <h3>Level Up<span class="achieveStage">Progress: 123</span></h3>
+                      <div id="achievsLevelUp"></div>
+                      <h3>Total Earnings<span class="achieveStage">Progress: 123</span></h3>
+                      <div id="achievsTotalEarnings"></div>
+                  </div>
+                  <div id="scribePageArena" class="scribePage">
+                      <h3>Arena</h3>
+                      <div id="arenaEnergy">
+                          <p>Energy</p>
+                          <progress id="arenaEnergyProgress"></progress>
+                          <p id="arenaEnergyP"></p>
+                      </div>
+                      <div id="arenaSelection">
+                          <div id="arenaSelection1" class="arenaSelection">
+                              <p class="arenaSelectionTitle">Peaceful Meadow</p>
+                              <img src="images/nav-arrow-up.svg" style="transform: rotate(90deg)">
+                          </div>
+                          <div id="arenaSelection2" class="arenaSelection locked">
+                              <p class="arenaSelectionTitle">Temperate Forest</p>
+                              <img src="images/nav-arrow-up.svg" style="transform: rotate(90deg)">
+                          </div>
+                          <div id="arenaSelection3" class="arenaSelection locked">
+                              <p class="arenaSelectionTitle">Whispering Caverns</p>
+                              <img src="images/nav-arrow-up.svg" style="transform: rotate(90deg)">
+                          </div>
+                          <div id="arenaSelection4" class="arenaSelection locked">
+                              <p class="arenaSelectionTitle">Frozen Tundra</p>
+                              <img src="images/nav-arrow-up.svg" style="transform: rotate(90deg)">
+                          </div>
+                          <div id="arenaSelection5" class="arenaSelection locked">
+                              <p class="arenaSelectionTitle">Blighted Marsh</p>
+                              <img src="images/nav-arrow-up.svg" style="transform: rotate(90deg)">
+                          </div>
+                          <div id="arenaSelection6" class="arenaSelection locked">
+                              <p class="arenaSelectionTitle">Crimson Canyon</p>
+                              <img src="images/nav-arrow-up.svg" style="transform: rotate(90deg)">
+                          </div>
+                          <div id="arenaSelection7" class="arenaSelection locked">
+                              <p class="arenaSelectionTitle">Thunder Plateau</p>
+                              <img src="images/nav-arrow-up.svg" style="transform: rotate(90deg)">
+                          </div>
+                          <div id="arenaSelection8" class="arenaSelection locked">
+                              <p class="arenaSelectionTitle">Molten Depths</p>
+                              <img src="images/nav-arrow-up.svg" style="transform: rotate(90deg)">
+                          </div>
+                          <div id="arenaSelection9" class="arenaSelection locked">
+                              <p class="arenaSelectionTitle">Forsaken Citadel</p>
+                              <img src="images/nav-arrow-up.svg" style="transform: rotate(90deg)">
+                          </div>
+                          <div id="arenaSelection10" class="arenaSelection locked">
+                              <p class="arenaSelectionTitle">Abyssal Ruins</p>
+                              <img src="images/nav-arrow-up.svg" style="transform: rotate(90deg)">
+                          </div>
+                          <div id="arenaSelection11" class="arenaSelection locked">
+                              <p class="arenaSelectionTitle">Obsidian Fortress</p>
+                              <img src="images/nav-arrow-up.svg" style="transform: rotate(90deg)">
+                          </div>
+                          <div id="arenaSelection12" class="arenaSelection locked">
+                              <p class="arenaSelectionTitle">Void Sanctum</p>
+                              <img src="images/nav-arrow-up.svg" style="transform: rotate(90deg)">
+                          </div>
+                          <div id="arenaSelection13" class="arenaSelection locked">
+                              <p class="arenaSelectionTitle">Celestial Rift</p>
+                              <img src="images/nav-arrow-up.svg" style="transform: rotate(90deg)">
+                          </div>
+                          <div id="arenaSelection14" class="arenaSelection locked">
+                              <p class="arenaSelectionTitle">Eternal Nexus</p>
+                              <img src="images/nav-arrow-up.svg" style="transform: rotate(90deg)">
+                          </div>
+                          <div id="arenaSelection15" class="arenaSelection locked">
+                              <p class="arenaSelectionTitle">Throne of Titans</p>
+                              <img src="images/nav-arrow-up.svg" style="transform: rotate(90deg)">
+                          </div>
+                      </div>
+                      <p>Level up to unlock new arenas!</p>
+                      <div id="battleOverlayContainer" class="disabled">
+                          <div id="battleOverlay">
+                              <h2>Battle</h2>
+                              <div id="battleInfo">
+                                  <div id="battleEnemyInfo" class="battleInfo">
+                                      <div id="battleEnemyNameContainer">
+                                          <p id="battleEnemyName">Enemy Name</p>
+                                          <p id="battleEnemyNameRarity">rarity</p>
+                                      </div>
+                                      <progress id="battleEnemyHealth" max="100" value="25"></progress>
+                                      <p id="battleEnemyHealthLabel">0/100</p>
+                                      <p id="battleEnemyStats">Stats Here</p>
+                                  </div>
+                                  <div id="battlePlayerInfo" class="battleInfo">
+                                      <p id="battlePlayerName">Enemy Name</p>
+                                      <progress id="battlePlayerHealth" max="100" value="25"></progress>
+                                      <p id="battlePlayerHealthLabel">0/100</p>
+                                      <p id="battlePlayerStats">Total Stats Here</p>
+                                  </div>
+                              </div>
+                              <h3>Log</h3>
+                              <div id="battleLog">
+                              </div>
+                              <h3 id="battleRewardsHead" class="disabled">Rewards</h3>
+                              <div id="battleRewards" class="disabled"></div>
+                              <button id="battleExit" class="disabled">Claim Rewards and Exit</button>
+                          </div>
+                      </div>
+                  </div>
+                  <div id="scribePageShop" class="scribePage">
+                      <div id="buyRandomOverlay" class="disabled">
+                          <p>You got:</p>
+                          <div id="buyRandomOverlayInner">
+                              <p id="buyRandomName"></p>
+                              <p id="buyRandomRarity"></p>
+                              <img id="buyRandomIcon">
+                              <div id="buyRandomPower">
+                                  <p></p>
+                                  <img>
+                              </div>
+                              <p id="buyRandomTrait"></p>
+                          </div>
+                          <button id="buyRandomExit" onclick="exitBuyRandomOverlay()">X</button>
+                      </div>
+                      <div id="shopTopBar">
+                          <h3>Shop</h3>
+                          <div id="shopTopBarCoins">
+                              <img src="images/coin.svg">
+                              <p>100</p>
+                          </div>
+                      </div>
+                      <div id="shopNav">
+                          <div id="shopNavBuy" class="active">
+                              <h2>Buy</h2>
+                          </div>
+                          <div id="shopNavSell">
+                              <h2>Sell</h2>
+                          </div>
+                      </div>
+                      <div id="shopBuy">
+                          <h4>Equipment</h4>
+                          <div id="shopItems">
+                          </div>
+                          <p>(Shop items reroll daily)</p>
+                      </div>
+                      <div id="shopSell" class="inactive">
+                          <h4>Click an item to sell it</h4>
+                          <div id="shopSellItems"></div>
+                      </div>
+                      <div id="shopInsufFunds" class="inactive">
+                          <p>Insufficient funds!</p>
+                          <p>Get more money by fighting monsters in the arena, completing quests, or through achievements.</p>
+                          <button id="shopInsufFundsExit" onclick='document.getElementById("shopInsufFunds").classList.add("inactive")'>X</button>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <div id="settingsDiv" class="disabled">
+          <div id="settingsDivInner">
+              <h3>Settings</h3>
+              <div id="settingsTheme">
+                  <h4>Theme</h4>
+                  <button><img src="images/light.svg">Bright Mode</button>
+                  <button><img src="images/dark.svg">Dark Mode</button>
+              </div>
+              <div id="settingsDyslexia">
+                  <h4>Dyslexia-friendly Font</h4>
+                  <label class="toggle-switch">
+                      <input type="checkbox" id="settingsDyslexiaInput">
+                      <span class="toggle-switch-slider"></span>
+                  </label>
+              </div>
+              <div id="settingsPort">
+                  <h4>Import or Export Your Data</h4>
+                  <textarea id="settingsPortInput"
+                                placeholder=" - To export your data, click the reload button below and save the resulting text somewhere safe.&#10 - To import your data, paste it in here and click the checkmark button below."></textarea>
+                  <div id="settingsPortButtons">
+                      <button id="settingsPortReload">
+                          <img src="images/reload.svg">
+                      </button>
+                      <button id="settingsPortConfirm">
+                          <img src="images/checkmark.svg">
+                      </button>
+                  </div>
+              </div>
+              <button id="settingsExit" onclick="toggleSettings('off')"> X Close</button>
+          </div>
+      </div>    
+      <script src="https://unpkg.com/string-similarity/umd/string-similarity.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.4/dist/confetti.browser.min.js"></script>
+      <script src="scribe.js"></script>
+  </body>
+</html>

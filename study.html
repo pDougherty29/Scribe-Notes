@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+      <title>Scribe Notes - Study</title>
+      <link rel="stylesheet" href="styles.css">
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&family=Fira+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
+      <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet" />
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Gelasio:ital,wght@0,400..700;1,400..700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto+Slab:wght@100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+      <link rel="icon" href="images/logo-dm.svg" type="image/svg+xml">
+  </head>
+  <body>
+      <div id="notifsContainer"></div>
+      <div id="bodyContainer">
+          <div id="navbar">
+              <div id="navTitleContainer">
+                  <img>
+                  <h2 id="navTitle" class="header" onclick='updateBooksCollapse();window.location.href = "index.html";'>Scribe Notes</h2>
+              </div>
+              <div class="navbox button" onclick='updateBooksCollapse();window.location.href = "index.html";'>
+                  <img src="images/homeicon.svg" class="navimg" draggable="false">
+                  <h3 id="homeLink" class="navlink">Home</h3>
+              </div>
+              <div class="navbox button" onclick='updateBooksCollapse();window.location.href = "scribe.html";'>
+                  <img src="images/scribe.svg" class="navimg" draggable="false">
+                  <h3 id="homeLink" class="navlink">Scribe</h3>
+              </div>
+              <div class="navbox button">
+                  <img src="images/edit-pencil%20.svg" class="navimg" draggable="false">
+                  <h3 id="studyLink" class="navlink">Study</h3>
+              </div>
+              <div class="navbox button" onclick="toggleBooksCollapse()">
+                  <img src="images/book-stack.svg" class="navimg" draggable="false">
+                  <h3 id="booksLink" class="navlink">Books</h3>
+                  <img src="images/nav-arrow-up.svg" id="booksCollapseArrow">
+              </div>
+              <div id="booksCollapse">
+              </div>
+              <div id="newDocPrompt">
+                  <input type="text" placeholder="New Doc Name" id="newDocInput" value="">
+                  <div id="newDocPromptButtons">
+                      <button id="newDocSubmit" onclick="newDocNameSubmit()" class="button">Submit</button>
+                      <button id="newDocCancel" onclick="toggleNewDocPrompt();creatingNewDoc=!creatingNewDoc;" class="button">X</button>
+                  </div>
+              </div>
+              <div id="newFolderPrompt">
+                  <input type="text" placeholder="New Folder Name" id="newFolderInput" value="">
+                  <div id="newFolderPromptButtons">
+                      <button id="newFolderSubmit" onclick="newFolderNameSubmit()" class="button">Submit</button>
+                      <button id="newFolderCancel" onclick="toggleNewFolderPrompt();creatingNewFolder=!creatingNewFolder;" class="button">X</button>
+                  </div>
+              </div>
+              <div id="settingsLink" class="navbox button" onclick="toggleSettings()">
+                  <img src="images/settings.svg" class="navimg" draggable="false">
+                  <h3 id="homeLink" class="navlink">Settings</h3>
+              </div>
+          </div>
+          <div id="selectDocContent">
+              <h3>Select a Doc to Study</h3>
+              <p id="selectDocSubtitle">(Or navigate to a doc and select "Study" in the collapsable menu)</p>
+              <div id="selectDocSelection">
+                  
+              </div>
+          </div>
+          <div id="noCardsNotif" class="hidden">
+                  <p>There are no cards in this set.</p>
+                  <button onclick="onDocSelection()"><img src="images/nav-arrow-up.svg">Return to doc selection</button>
+              </div>
+          <div id="studyContent" class="hidden">
+              <div id="studyTopBar">
+                  <div id="studySelectionReturn" class="button" onclick="onDocSelection()">
+                      <img src="images/nav-arrow-up.svg">
+                      <p>Return to doc selection</p>
+                  </div>
+                  <div id="studySettings" class="button" onclick="toggleStudySettings('on')">
+                      <img src="images/settings.svg">
+                  </div>
+              </div>
+              <h3 id="selectDocHead">Title</h3>
+              <div id="trackProgressFinish" class="disabled">
+                  <p>You've finished this set!<br>Great work!</p>
+                  <button id="trackProgressFinishBack" onclick="onDocSelection()"><img src="images/nav-arrow-up.svg">Return to doc selection</button>
+                  <button id="trackProgressFinishRedo" onclick="initializeSet(currentSetName)"><img src="images/refresh.svg">Restart set</button>
+              </div>
+              <div id="cardHeader">
+                  <p id="cardHeaderFirst">0</p>
+                  <p id="cardHeaderMiddle">/</p>
+                  <p id="cardHeaderSecond">0</p>
+              </div>
+              <div id="studyTermContainer">
+                  <div id="card">
+                      <div class="cardInner">
+                          <div class="cardFace cardFront">
+                              <p id="studyTerm" lang="en">Term here</p>
+                          </div>
+                          <div class="cardFace cardBack">
+                              <p id="studyDefinition" lang="en">Definition here</p>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <div id="studyDefinitionContainer"></div>
+              <div id="studyButtonsNormal" class="studyButtons">
+                  <button class="prevCard" onclick="prevCard()"><img src="images/nav-arrow-up.svg"></button>
+                  <button class="studyFlip" onclick="flipCard()">Flip</button>
+                  <button class="nextCard" onclick="nextCard()"><img src="images/nav-arrow-up.svg"></button>
+              </div>
+              <div id="studyButtonsTrackProgress" class="studyButtons disabled">
+                  <button class="prevCard" onclick="prevCard()" id="studyButtonsTrackProgressFirst"><img src="images/close.svg"></button>
+                  <button class="studyFlip" onclick="flipCard()" id="studyButtonsTrackProgressFlip">Flip</button>
+                  <button class="nextCard" onclick="nextCard()" id="studyButtonsTrackProgressSecond"><img src="images/correct.svg"></button>
+              </div>
+              <div id="studyButtonsWrite" class="studyButtons disabled">
+                  <p id="studyButtonsWriteP">Waiting for answer...</p>
+                  <input placeholder="Answer" id="studyButtonsWriteText">
+                  <button id="studyButtonsWriteSubmit" onclick="nextCard()">Submit</button>
+              </div>
+          </div>
+      </div>
+      <div id="studySettingsOverlay" class="hidden">
+          <div id="studySettingsOverlayInner">
+              <h3>Study Settings</h3>
+              <div id="studySettingsMode">
+                  <h4>Study Mode</h4>
+                  <div id="studySettingsModeButtons">
+                      <button id="normalButton" onclick="changeMode('normal')">Normal</button>
+                      <button id="trackProgressButton" onclick="changeMode('track progress')">Track Progress</button>
+                      <button id="writeButton" onclick="changeMode('write')">Write</button>
+                  </div>
+              </div>
+              <div id="studySettingsStrictness">
+                  <h4>Grading Strictness</h4>
+                  <p>(For Write mode only)</p>
+                  <div id="studySettingsStrictnessButtons">
+                      <button id="strictnessButtonEMcs">Exact Match (case sensitive)</button>
+                      <button id="strictnessButtonEMci">Exact Match (case insensitive)</button>
+                      <button id="strictnessButtonAM">Allow mispellings</button>
+                      <button id="strictnessButtonE">Easy</button>
+                  </div>
+              </div>
+              <button onclick="toggleStudySettings('off')"> X Close</button>
+          </div>
+      </div>
+      <div id="settingsDiv" class="disabled">
+          <div id="settingsDivInner">
+              <h3>Settings</h3>
+              <div id="settingsTheme">
+                  <h4>Theme</h4>
+                  <button><img src="images/light.svg">Bright Mode</button>
+                  <button><img src="images/dark.svg">Dark Mode</button>
+              </div>
+              <div id="settingsDyslexia">
+                  <h4>Dyslexia-friendly Font</h4>
+                  <label class="toggle-switch">
+                      <input type="checkbox" id="settingsDyslexiaInput">
+                      <span class="toggle-switch-slider"></span>
+                  </label>
+              </div>
+              <div id="settingsPort">
+                  <h4>Import or Export Your Data</h4>
+                  <textarea id="settingsPortInput"
+                                placeholder=" - To export your data, click the reload button below and save the resulting text somewhere safe.&#10 - To import your data, paste it in here and click the checkmark button below."></textarea>
+                  <div id="settingsPortButtons">
+                      <button id="settingsPortReload">
+                          <img src="images/reload.svg">
+                      </button>
+                      <button id="settingsPortConfirm">
+                          <img src="images/checkmark.svg">
+                      </button>
+                  </div>
+              </div>
+              <button id="settingsExit" onclick="toggleSettings('off')"> X Close</button>
+          </div>
+      </div>    
+      <script src="https://unpkg.com/string-similarity/umd/string-similarity.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.4/dist/confetti.browser.min.js"></script>
+      <script src="study.js"></script>
+  </body>
+</html>
